@@ -55,7 +55,7 @@ class MainActivity : AppCompatActivity() {
         // when the list changes
         setDataSource(viewModel.getSortKey())
 
-        //initSwipeToDelete()
+        initSwipeToDelete()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -63,11 +63,18 @@ class MainActivity : AppCompatActivity() {
         viewModel.sortMap.forEach {
             menu?.add(it.first)
         }
+        menu?.add(HexColorViewModel.ADD_MORE)
+        menu?.add(HexColorViewModel.START_OVER)
         return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        setDataSource(item?.title.toString())
+        when (val itemTitle = item?.title.toString()) {
+            HexColorViewModel.ADD_MORE -> viewModel.addMore(this)
+            HexColorViewModel.START_OVER -> viewModel.startOver(this)
+            else -> setDataSource(itemTitle)
+        }
+
         return super.onOptionsItemSelected(item)
     }
 
@@ -82,19 +89,15 @@ class MainActivity : AppCompatActivity() {
     private fun initSwipeToDelete() {
         ItemTouchHelper(object : ItemTouchHelper.Callback() {
             // enable the items to swipe to the left or right
-            override fun getMovementFlags(recyclerView: RecyclerView,
-                                          viewHolder: RecyclerView.ViewHolder): Int =
+            override fun getMovementFlags(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder): Int =
                     makeMovementFlags(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT)
 
-            override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder,
-                                target: RecyclerView.ViewHolder): Boolean = false
+            override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean = false
 
             // When an item is swiped, remove the item via the view model. The list item will be
             // automatically removed in response, because the adapter is observing the live list.
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                (viewHolder as HexColorViewHolder).hexColor?.let {
-                    viewModel.remove(it)
-                }
+                (viewHolder as HexColorViewHolder).hexColor?.let { viewModel.remove(it) }
             }
         }).attachToRecyclerView(hexColorList)
     }

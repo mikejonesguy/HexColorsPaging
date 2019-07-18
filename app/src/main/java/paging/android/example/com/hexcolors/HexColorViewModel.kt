@@ -17,6 +17,7 @@
 package paging.android.example.com.hexcolors
 
 import android.app.Application
+import android.content.Context
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.paging.Config
@@ -53,11 +54,23 @@ class HexColorViewModel(app: Application) : AndroidViewModel(app) {
         return factory.toLiveData(PAGING_CONFIG)
     }
 
-    fun remove(hexColor: HexColor) = ioThread {
+    fun startOver(context: Context) {
+        HexColorDb.startOver(context)
+    }
+
+    fun addMore(context: Context) {
+        HexColorDb.addMore(context)
+    }
+
+    fun remove(hexColor: HexColor) = Executors.ioThread {
         dao.delete(hexColor)
     }
 
     companion object {
+
+        const val ADD_MORE = "Add More"
+
+        const val START_OVER = "Start Over"
 
         val PAGING_CONFIG = Config(
                 /**

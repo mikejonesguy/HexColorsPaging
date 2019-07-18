@@ -40,7 +40,7 @@ abstract class HexColorDb : RoomDatabase() {
                         HexColorDb::class.java, "HexColorDatabase")
                         .addCallback(object : RoomDatabase.Callback() {
                             override fun onCreate(db: SupportSQLiteDatabase) {
-                                fillInDb(context.applicationContext)
+                                addMore(context.applicationContext)
                             }
                         }).build()
             }
@@ -51,15 +51,25 @@ abstract class HexColorDb : RoomDatabase() {
          * fill database with list of hexColors
          */
         private fun fillInDb(context: Context) {
-            // inserts in Room are executed on the current thread, so we insert in the background
-            ioThread {
-                val colors = mutableListOf<HexColor>()
-                val stepSize = 0x10101
-                for (hex in 0x000000 until 0xFFFFFF step stepSize) {
-                    colors.add(HexColor(hex + Random.nextInt(stepSize - 1)))
-                }
+            val colors = mutableListOf<HexColor>()
+            val stepSize = 0x10101
+            for (hex in 0x000000 until 0xFFFFFF step stepSize) {
+                colors.add(HexColor(hex + Random.nextInt(stepSize - 1)))
+            }
 
-                get(context).hexColorDao().insert(colors)
+            get(context).hexColorDao().insert(colors)
+        }
+
+        fun addMore(context: Context) {
+            Executors.ioThread {
+                fillInDb(context)
+            }
+        }
+
+        fun startOver(context: Context) {
+            Executors.ioThread {
+                get(context).clearAllTables()
+                fillInDb(context)
             }
         }
     }

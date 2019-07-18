@@ -16,13 +16,39 @@
 
 package paging.android.example.com.hexcolors
 
+import android.os.Handler
+import android.os.Looper
+import java.util.concurrent.Executor
 import java.util.concurrent.Executors
 
-private val IO_EXECUTOR = Executors.newSingleThreadExecutor()
+@Suppress("MemberVisibilityCanBePrivate")
+object Executors {
 
-/**
- * Utility method to run blocks on a dedicated background thread, used for io/database work.
- */
-fun ioThread(f : () -> Unit) {
-    IO_EXECUTOR.execute(f)
+    private val UI = MainThreadExecutor()
+    private val IO = Executors.newSingleThreadExecutor()
+
+    fun isMainThread() = Looper.myLooper() == Looper.getMainLooper()
+
+    fun uiThread(action: () -> Unit) {
+        if (isMainThread()) action.invoke()
+        else UI.execute( Runnable(action) )
+    }
+
+    fun uiThread(command: Runnable) {
+        if (isMainThread()) command.run()
+        else UI.execute(command)
+    }
+
+    fun ioThread(action: () -> Unit) {
+        IO.execute(action)
+    }
+
+    class MainThreadExecutor: Executor {
+        private val handler = Handler(Looper.getMainLooper())
+
+        override fun execute(command: Runnable) {
+            handler.post(command)
+        }
+    }
+
 }
