@@ -1,0 +1,88 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 1,
+    "identityHash": "f5bb21a5af12e3bdfff2407154dc8f7e",
+    "entities": [
+      {
+        "tableName": "HexColor",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `hex` TEXT NOT NULL, `hslH` REAL NOT NULL, `hslS` REAL NOT NULL, `hslL` REAL NOT NULL, `labL` REAL NOT NULL, `labA` REAL NOT NULL, `labB` REAL NOT NULL, `order1` INTEGER NOT NULL, `order2` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "hex",
+            "columnName": "hex",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "hslH",
+            "columnName": "hslH",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "hslS",
+            "columnName": "hslS",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "hslL",
+            "columnName": "hslL",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "labL",
+            "columnName": "labL",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "labA",
+            "columnName": "labA",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "labB",
+            "columnName": "labB",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "order1",
+            "columnName": "order1",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "order2",
+            "columnName": "order2",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [],
+        "foreignKeys": []
+      }
+    ],
+    "views": [],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"f5bb21a5af12e3bdfff2407154dc8f7e\")"
+    ]
+  }
+}
